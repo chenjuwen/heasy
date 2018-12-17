@@ -26,7 +26,7 @@ Android Studio
 	语音合成、语音识别、人脸识别和中英文翻译的接口参数需要更新到baidu-ai\src\main\assets\ai-config.xml 配置文件中。  
 
 ### 使用指南
-<a href="https://github.com/chenjuwen/heasy/tree/master/doc/heasy_guide.docx">heasy使用指南</a>
+	&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/chenjuwen/heasy/tree/master/doc/heasy_guide.docx" target="_blank">heasy使用指南</a>
 
 ## 技术交流  
 <img src="https://github.com/chenjuwen/heasy/blob/master/doc/author.jpg" width="150" height="200"/>  
