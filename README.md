@@ -2,7 +2,7 @@
 heasy是一个基于Android平台的APP混合开发框架，页面层集成jquery、VUE、mint-ui、muse-ui等前端框架，具有容易使用、扩展性好、灵活性强、易维护等特性。  
 
 ## 架构图   
-<img src="https://github.com/chenjuwen/heasy/blob/master/doc/design-pic.jpg" width="600" height="400"/> 
+<img src="https://github.com/chenjuwen/heasy/blob/master/doc/design-pic.jpg"/> 
 
 框架的主要扩展点：  
     1、	Action类  
