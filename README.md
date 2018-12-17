@@ -29,27 +29,36 @@ Android Studio
 <a href="https://github.com/chenjuwen/heasy/blob/master/doc/heasy_guide.docx" target="_blank">heasy使用指南</a>  
 
 ### 部分截图  
-<img src="doc/demo_img/01.png" width="140" height="230"/>
-<img src="doc/demo_img/02.png" width="140" height="230"/>
-<img src="doc/demo_img/03.png" width="140" height="230"/>
-<img src="doc/demo_img/04.png" width="140" height="230"/>
-<img src="doc/demo_img/05.png" width="140" height="230"/>
-<img src="doc/demo_img/06.png" width="140" height="230"/>
-<img src="doc/demo_img/07.png" width="140" height="230"/>
-<img src="doc/demo_img/08.png" width="140" height="230"/>
-<img src="doc/demo_img/09.png" width="140" height="230"/>
-<img src="doc/demo_img/10.png" width="140" height="230"/>
-
-<img src="doc/demo_img/11.png" width="140" height="230"/>
-<img src="doc/demo_img/12.png" width="140" height="230"/>
-<img src="doc/demo_img/13.png" width="140" height="230"/>
-<img src="doc/demo_img/14.png" width="140" height="230"/>
-<img src="doc/demo_img/15.png" width="140" height="230"/>
-<img src="doc/demo_img/16.png" width="140" height="230"/>
-<img src="doc/demo_img/17.png" width="140" height="230"/>
-<img src="doc/demo_img/18.png" width="140" height="230"/>
-<img src="doc/demo_img/19.png" width="140" height="230"/>
-<img src="doc/demo_img/20.png" width="140" height="230"/>
+<table>
+  <tr>
+    <td><img src="doc/demo_img/01.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/02.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/03.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/04.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/05.png" width="140" height="230"/></td>
+  </tr>
+  <tr>
+    <td><img src="doc/demo_img/06.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/07.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/08.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/09.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/10.png" width="140" height="230"/></td>
+  </tr>
+  <tr>
+    <td><img src="doc/demo_img/11.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/12.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/13.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/14.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/15.png" width="140" height="230"/></td>
+  </tr>
+  <tr>
+    <td><img src="doc/demo_img/16.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/17.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/18.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/19.png" width="140" height="230"/></td>
+    <td><img src="doc/demo_img/20.png" width="140" height="230"/></td>
+  </tr>
+</table>
 
 ## 技术交流  
 <img src="https://github.com/chenjuwen/heasy/blob/master/doc/author.jpg" width="150" height="200"/>  
