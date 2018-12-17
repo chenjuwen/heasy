@@ -4,6 +4,12 @@ heasy是一个基于Android平台的APP混合开发框架，页面层集成jquer
 ## 架构图   
 <img src="https://github.com/chenjuwen/heasy/blob/master/doc/design-pic.jpg" width="600" height="400"/> 
 
+框架的主要扩展点：  
+    1、	Action类  
+    2、	Service类  
+    3、	前端UI框架  
+    4、	JSBridge的内置JS方法  
+
 ## 开发工具  
 Android Studio  
 
