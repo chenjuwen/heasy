@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <!-- TopBar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_weight="1"
+        android:gravity="center|left"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/btn_hint1"
+            android:gravity="left|center_vertical"
+            android:background="#00000000"
+            android:text="&lt;"
+            android:layout_marginLeft="5dp"
+            android:textSize="30dp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="扫一扫"
+            android:layout_marginRight="50dp"
+            android:textSize="20dp" />
+    </LinearLayout>
+
+    <!-- Middle Area -->
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/barcodeView"
+        android:layout_weight="2"
+        app:zxing_framing_rect_width="200dp"
+        app:zxing_framing_rect_height="200dp"
+        app:zxing_preview_scaling_strategy="centerCrop"
+        app:zxing_use_texture_view="false"
+        app:zxing_scanner_layout="@layout/custom_barcode_scanner">
+    </com.journeyapps.barcodescanner.DecoratedBarcodeView>
+
+    <!-- BottomBar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_weight="1"
+        android:gravity="center|left"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/btn_hint1"
+            android:background="#00000000"
+            android:layout_weight="1"
+            android:text="打开闪关灯"
+            android:textSize="17dp" />
+    </LinearLayout>
+
+</LinearLayout>

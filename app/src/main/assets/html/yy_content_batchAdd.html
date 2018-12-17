@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<TITLE>批量添加</TITLE>
+	<link rel="stylesheet" type="text/css" href="css/mint.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+
+	<script src="js/jquery.min-1.11.3.js"></script>
+	<script src="js/JSConstants.js"></script>
+	<script src="js/JSBridge.js"></script>
+	<script src="js/JSBridgeExt.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/mint.min.js"></script>
+
+	<style type="text/css">
+		.field-textarea-container {
+			margin: 5px 5px 5px 5px;
+			border-left: 1px solid #d9d9d9;
+			border-right: 1px solid #d9d9d9;
+		}
+
+		.field-btton-container {
+			margin: 10px 5px 10px 5px;
+			text-align: center;
+		}
+
+		.mint-button-text {
+			font-size: 15px;
+		}
+	</style>
+</HEAD>
+
+<BODY>
+	<div id="app" class="vue-mint-container">
+		<mt-header fixed :title="headerLabel">
+			<mt-button icon="back" slot="left" @click="_goback">返回</mt-button>
+		</mt-header>
+
+		<div class="field-textarea-container">
+			<mt-field label="" type="textarea" rows="16" v-model="content"></mt-field>
+		</div>
+
+		<div style="color:red; font-size:13px; margin-left:5px;" v-show="type==1">
+			说明：单词和释义之间用 冒号 分隔，比如 head:头 。一个单词一行
+		</div>
+
+		<div style="color:red; font-size:13px; margin-left:5px;" v-show="type==2">
+			说明：英文句子占一行，中文句子占一行。比如：<br>
+			Let's go home!<br>
+			我们回家吧!<br>
+		</div>
+
+		<div class="field-btton-container">
+			<mt-button type="primary" size="large" @click="_save">保存</mt-button>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				content: "",
+				gradeId: "",
+				unitId: "",
+				type: "1",
+
+				headerLabel: "批量添加单词"
+			},
+			methods: {
+				_goback: function(){
+					goBack();
+				},
+				_save: function(){
+					saveData();
+				}
+			}
+		});
+
+		function pageFinishCallback(){
+			vm.gradeId = getPageParameter("gradeId");
+			vm.unitId = getPageParameter("unitId");
+			vm.type = getPageParameter("type");
+
+			if("1" == vm.type){
+				vm.headerLabel = "批量添加单词";
+			}else{
+				vm.headerLabel = "批量添加句子";
+			}
+		}
+
+		function saveData(){
+			if(vm.content == ""){
+				vm.$toast({
+					message: '请输入内容',
+					duration: 1500
+				});
+				return;
+			}
+
+			var obj = {"unitId":vm.unitId, "type":vm.type, "content":vm.content};
+			var msg = jsBridge.dispatchAction("YYContent", JSON.stringify(obj), "batchImport");
+
+			if(msg == "success"){
+				alert("添加成功");
+				goBack();
+			}else{
+				alert(msg);
+			}
+		}
+
+		function goBack(){
+			backPage("yy_content.html", "gradeId="+vm.gradeId+"&unitId="+vm.unitId);
+		}
+	</script>
+
+</BODY>
+</HTML>

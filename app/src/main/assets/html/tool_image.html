@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<TITLE>图片识别</TITLE>
+	<link rel="stylesheet" type="text/css" href="css/mint.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+
+	<script src="js/jquery.min-1.11.3.js"></script>
+	<script src="js/JSConstants.js"></script>
+	<script src="js/JSBridge.js"></script>
+	<script src="js/JSBridgeExt.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/mint.min.js"></script>
+
+	<style type="text/css">
+		.mint-cell-wrapper {
+			background-image: none;
+		}
+
+		.mint-cell:last-child {
+			background-image: none;
+		}
+	</style>
+</HEAD>
+
+<BODY>
+	<div id="imageApp" class="vue-mint-container">
+		<mt-header fixed title="图片识别">
+			<mt-button icon="back" slot="left" @click="_goback">返回</mt-button>
+		</mt-header>
+
+		<div style="padding:5px;">
+			<div style="border:1px solid #d9d9d9; margin-bottom:5px; height:330px; padding:5px;">
+				<mt-field label="" type="textarea" rows="10" :value="content"></mt-field>
+			</div>
+
+			<div class="img-container" align="center" style="background-color:#4F94CD;">
+				<img :src="imagePath" width="250" height="150">
+			</div>
+			
+			<div class="field-btton-container" style="margin-top:10px; text-align:center;">
+				<mt-button type="primary" size="small" @click="takePhoto" style="width:100px">拍照</mt-button>&nbsp;&nbsp;
+				<mt-button type="primary" size="small" @click="recognizeFunc" style="width:100px">重新识别</mt-button>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		var imageVM = new Vue({
+			el: '#imageApp',
+			data: {
+				imagePath: "",
+				content: ""
+			},
+			methods: {
+				_goback: function(){
+					backMainPage();
+				},
+				takePhoto: function(){ //拍照
+					this.imagePath = "";
+					var obj = {"callback":"com.heasy.app.action.callback.OCRBasicGeneralCallback"};
+					jsBridge.dispatchAction(actionNames.PhotoCrop, JSON.stringify(obj));
+				},
+				recognizeFunc: function(){ //重新识别
+					if(this.imagePath != ""){
+						this.$indicator.open({
+							spinnerType: 'fading-circle'
+						});
+
+						var obj = {"imagePath":this.imagePath, "callback":"com.heasy.app.action.callback.OCRBasicGeneralCallback"};
+						jsBridge.dispatchAction(actionNames.OCR, JSON.stringify(obj), "recognize");
+					}
+				}
+			}
+		});
+
+		function startCallback(_imagePath){
+			imageVM.imagePath = _imagePath;
+
+			imageVM.$indicator.open({
+				spinnerType: 'fading-circle'
+			});
+		}
+
+		function resultCallback(_content){
+			imageVM.$indicator.close();
+			imageVM.content = _content;
+		}
+
+		function pageFinishCallback(){
+			
+		}
+	</script>
+
+</BODY>
+</HTML>

@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<TITLE>人脸检测</TITLE>
+	<link rel="stylesheet" type="text/css" href="css/mint.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/muse-ui.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+
+	<script src="js/jquery.min-1.11.3.js"></script>
+	<script src="js/JSConstants.js"></script>
+	<script src="js/JSBridge.js"></script>
+	<script src="js/JSBridgeExt.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/mint.min.js"></script>
+	<script src="js/muse-ui.js"></script>
+
+	<style type="text/css">
+		.mint-cell-wrapper {
+			background-image: none;
+		}
+
+		.mint-cell:last-child {
+			background-image: none;
+		}
+
+		.mu-appbar {
+			height: 40px;
+		}
+		.mu-appbar-title {
+			font-size: 16px;
+			font-weight: 600;
+		}
+
+		.mu-dialog-body td {
+			padding:13px 5px;;
+			font-size: 14px;
+		}
+	</style>
+</HEAD>
+
+<BODY style="background-color:#F0FFFF;">
+	<div id="imageApp" class="vue-mint-container">
+		<mt-header fixed title="人脸检测">
+			<mt-button icon="back" slot="left" @click="_goback">返回</mt-button>
+		</mt-header>
+
+		<div style="padding:5px; text-align:center;">
+			<div>
+				<img :src="imagePath" width="350" height="450"/>
+				<div id="photoContainer"></div>
+			</div>
+
+			<div style="text-align:center; margin-top:10px;">
+				<mt-button type="primary" size="small" @click="takePhoto" style="width:100px;">拍照</mt-button>&nbsp;
+				<mt-button type="primary" size="small" @click="verifyFace" style="width:100px;">活体检测</mt-button>&nbsp;
+				<mt-button type="primary" size="small" @click="checkFace" style="width:100px;">人脸检测</mt-button>
+			</div>
+		</div>
+
+		<mu-dialog width="360" transition="slide-bottom" fullscreen :open.sync="openFullscreen">
+			<mu-appbar color="primary" title="人脸属性">
+				<mu-button slot="right" flat  @click="closeFullscreenDialog">关闭</mu-button>
+			</mu-appbar>
+			<div style="padding:5px;">
+				<table width="100%" border=1 style="border:1px solid #d9d9d9; border-collapse:collapse;">
+					<tr><td width="210">性别：</td><td> {{ faceInfo.list[0].gender }} </td></tr>
+					<tr><td>年龄：</td><td> {{ faceInfo.list[0].age }} </td></tr>
+					<tr><td>是否带眼镜：</td><td> {{ faceInfo.list[0].glasses }} </td></tr>
+					<tr><td>表情：</td><td> {{ faceInfo.list[0].expression }} </td></tr>
+					<tr><td>美丑：</td><td> {{ faceInfo.list[0].beauty }} </td></tr>
+					<tr><td>脸型：</td><td> {{ faceInfo.list[0].face_shape }} </td></tr>
+					<tr><td>人种：</td><td> {{ faceInfo.list[0].race }} </td></tr>
+					<tr><td>人脸旋转[-90(左), 90(右)]：</td><td> {{ faceInfo.list[0].yaw }} </td></tr>
+					<tr><td>人脸俯仰[-90(上), 90(下)]：</td><td> {{ faceInfo.list[0].pitch }} </td></tr>
+					<tr><td>活体分数值：</td><td> {{ faceInfo.list[0].liveness }} </td></tr>
+					<tr><td>人脸置信度：</td><td> {{ faceInfo.list[0].face_probability }} </td></tr>
+				</table>
+			</div>
+		</mu-dialog>
+	</div>
+
+	<script type="text/javascript">
+		var imageVM = new Vue({
+			el: '#imageApp',
+			data: {
+				imagePath: "",
+				openFullscreen: false,
+				faceInfo: {
+					error_code: "",
+					error_msg: "",
+					list:[
+						{
+							"gender":"",
+							"age":"",
+							"glasses":"",
+							"expression":"",
+							"beauty":"",
+							"face_shape":"",
+							"race":"",
+							"yaw":"",
+							"pitch":"",
+							"liveness":"",
+							"face_probability":""
+						}
+					]
+				}
+			},
+			methods: {
+				_goback: function(){
+					backMainPage();
+				},
+				closeFullscreenDialog () {
+					this.openFullscreen = false;
+				},
+				takePhoto: function(){
+					this.imagePath = "";
+					jQuery("#photoContainer").empty();
+
+					var obj = {"zoomWidth":"350", "zoomHeight":"450"};
+					jsBridge.dispatchAction("TakePhoto", JSON.stringify(obj));
+				},
+				verifyFace: function(){
+					jQuery("#photoContainer").empty();
+					if(this.imagePath != ""){
+						openLoading();
+						var obj = {"imageFilePath":this.imagePath.substring(0, this.imagePath.indexOf("?"))};
+						jsBridge.dispatchAction("Face", JSON.stringify(obj));						
+					}
+				},
+				checkFace: function(){
+					jQuery("#photoContainer").empty();
+					if(this.imagePath != ""){
+						var obj = {"imageFilePath":this.imagePath.substring(0, this.imagePath.indexOf("?"))};
+						var result = jsBridge.dispatchAction("Face", JSON.stringify(obj), "detect");
+						result = jQuery.parseJSON(result);
+
+						var s = "<div style=\"position: absolute; border:1px solid yellow; ";
+						s += "width:" + result.list[0].width + "px; height:" + result.list[0].height + "px; left:" + result.list[0].left + "px; top:" + result.list[0].top + "px;";
+						s += "\"></div>";
+						jQuery("#photoContainer").append(s);
+					}
+				}
+			}
+		});
+
+		function takePhotoCallback(path){
+			imageVM.imagePath = path + "?t=" + (new Date()).getTime();
+		}
+
+		function faceVerifyCallback(jsonData){
+			closeLoading();
+			//alert(jsonData);
+			//alert(JSON.stringify(jsonData));
+
+			var result = jsonData;
+			if(result.error_code == "0"){
+				imageVM.openFullscreen = true;
+				imageVM.faceInfo = result;
+
+				
+	        	var s = "<div style=\"position: absolute; border:1px solid yellow; ";
+				s += "width:" + result.list[0].width + "px; height:" + result.list[0].height + "px; left:" + result.list[0].left + "px; top:" + result.list[0].top + "px;";
+	        	s += "\"></div>";
+				jQuery("#photoContainer").append(s);
+
+			}else{
+				imageVM.openFullscreen = false;
+				imageVM.$toast({
+					message: result.error_msg,
+					duration: 2000
+				});
+			}
+		}
+
+		function openLoading(){
+			imageVM.$indicator.open({
+				spinnerType: 'fading-circle'
+			});
+		}
+
+		function closeLoading(){
+			imageVM.$indicator.close();
+		}
+
+		function pageFinishCallback(){
+
+		}
+	</script>
+
+</BODY>
+</HTML>

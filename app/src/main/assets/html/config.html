@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<TITLE>参数配置</TITLE>
+	<link rel="stylesheet" type="text/css" href="css/mint.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+
+	<script src="js/jquery.min-1.11.3.js"></script>
+	<script src="js/JSConstants.js"></script>
+	<script src="js/JSBridge.js"></script>
+	<script src="js/JSBridgeExt.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/mint.min.js"></script>
+
+	<style type="text/css">
+		.mint-cell-wrapper {
+			padding: 0 0;
+		}
+
+		.mint-cell-title {
+			margin-left: 10px;
+		}
+
+		.mint-cell-value {
+			margin-left: 10px;
+		}
+
+		.mint-cell:last-child {
+			background-image: none;
+		}
+
+		.picker-item {
+			color: #bbb;
+			font-size: 14px;
+		}
+
+		.mint-switch {
+			margin-right: 10px;
+		}
+
+		.mint-radiolist-title {
+			display:none;
+		}
+
+		.mint-radiolist-label {
+			padding: 0 5px 0 0px;
+		}
+
+		.field-btton-container {
+			margin: 10px 0 10px 0;
+			text-align: center;
+		}
+
+		.mint-popup .mint-datetime-action {
+			width: 60px;
+			line-height: 30px;
+			color: #409EFF;
+			background: #ecf5ff;
+			border-color: #409EFF;
+			margin: 3px;
+			font-size: 14px;
+		}
+	</style>
+</HEAD>
+
+<BODY>
+	<div id="app" class="vue-mint-container">
+		<mt-header fixed title="参数配置">
+			<mt-button icon="back" slot="left" @click="_goback">返回</mt-button>
+		</mt-header>
+
+		<div class="form-phase">
+			<div class="form-phase-title">图片识别：</div>
+			<mt-field label="app id:" v-model.trim="itt_appid"></mt-field>
+			<mt-field label="api key:" v-model.trim="itt_apikey"></mt-field>
+			<mt-field label="secret key:" v-model.trim="itt_secretkey"></mt-field>
+		</div>
+
+		<div class="form-phase">
+			<div class="form-phase-title">语音合成：</div>
+			<mt-field label="app id:" v-model.trim="tts_appid"></mt-field>
+			<mt-field label="api key:" v-model.trim="tts_apikey"></mt-field>
+			<mt-field label="secret key:" v-model.trim="tts_secretkey"></mt-field>
+
+			<mt-cell title="发音人:">
+				<mt-radio title="" v-model="person" :options="['女声']"> </mt-radio>
+				<mt-radio title="" v-model="person" :options="['男声']"> </mt-radio>
+			</mt-cell>
+
+			<mt-cell title="语速:">
+				<mt-radio title="" v-model="speed" :options="'3'"> </mt-radio>
+				<mt-radio title="" v-model="speed" :options="'4'"> </mt-radio>
+				<mt-radio title="" v-model="speed" :options="'5'"> </mt-radio>
+				<mt-radio title="" v-model="speed" :options="'6'"> </mt-radio>
+			</mt-cell>
+		</div>
+
+		<div class="form-phase">
+			<div class="form-phase-title">语音识别：</div>
+			<mt-field label="app id:" v-model.trim="asr_appid"></mt-field>
+			<mt-field label="api key:" v-model.trim="asr_apikey"></mt-field>
+			<mt-field label="secret key:" v-model.trim="asr_secretkey"></mt-field>
+		</div>
+
+		<div class="form-phase">
+			<div class="form-phase-title">翻译：</div>
+			<mt-field label="app id:" v-model.trim="trans_appid"></mt-field>
+			<mt-field label="secret key:" v-model.trim="trans_secretkey"></mt-field>
+		</div>
+
+		<div class="field-btton-container">
+			<mt-button type="primary" size="large" @click="_save">保存</mt-button>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				itt_appid: "",
+				itt_apikey: "",
+				itt_secretkey: "",
+
+				tts_appid: "",
+				tts_apikey: "",
+				tts_secretkey: "",
+				person: "",
+				personValue: "",
+				speed: "3",
+
+				asr_appid: "",
+				asr_apikey: "",
+				asr_secretkey: "",
+
+				trans_appid: "",
+				trans_secretkey: ""
+			},
+			methods: {
+				_goback: function(){
+					backMainPage();
+				},
+				_save: function(){
+					saveData();
+				}
+			},
+			watch: {
+				person: function(val){
+					if("女声" == val){
+						this.personValue = "0";
+					}else{
+						this.personValue = "1";
+					}
+				}
+			}
+		});
+
+		function pageFinishCallback(){
+			vm.itt_appid = getPageParameter("itt_appid");
+			vm.itt_apikey = getPageParameter("itt_apikey");
+			vm.itt_secretkey = getPageParameter("itt_secretkey");
+
+			vm.tts_appid = getPageParameter("tts_appid");
+			vm.tts_apikey = getPageParameter("tts_apikey");
+			vm.tts_secretkey = getPageParameter("tts_secretkey");
+			
+			var personValue = getPageParameter("person");
+			if("0" == personValue){
+				vm.person = "女声";
+			}else{
+				vm.person = "男声";
+			}
+
+			vm.speed = getPageParameter("speed");
+
+			vm.asr_appid = getPageParameter("asr_appid");
+			vm.asr_apikey = getPageParameter("asr_apikey");
+			vm.asr_secretkey = getPageParameter("asr_secretkey");
+
+			vm.trans_appid = getPageParameter("trans_appid");
+			vm.trans_secretkey = getPageParameter("trans_secretkey");
+		}
+
+	    function saveData() {
+			var itt_appid = vm.itt_appid;
+			var itt_apikey = vm.itt_apikey;
+			var itt_secretkey = vm.itt_secretkey;
+
+			var tts_appid = vm.tts_appid;
+			var tts_apikey = vm.tts_apikey;
+			var tts_secretkey = vm.tts_secretkey;
+			var person = vm.personValue;
+			var speed = vm.speed;
+
+			var asr_appid = vm.asr_appid;
+			var asr_apikey = vm.asr_apikey;
+			var asr_secretkey = vm.asr_secretkey;
+			
+			var trans_appid = vm.trans_appid;
+			var trans_secretkey = vm.trans_secretkey;
+
+            var obj = {"itt_appid":itt_appid, "itt_apikey":itt_apikey, "itt_secretkey":itt_secretkey, "tts_appid":tts_appid, "tts_apikey":tts_apikey, "tts_secretkey":tts_secretkey, "person":person, "speed":speed, "asr_appid":asr_appid, "asr_apikey":asr_apikey, "asr_secretkey":asr_secretkey, "trans_appid":trans_appid, "trans_secretkey":trans_secretkey};
+			var msg = jsBridge.dispatchAction(actionNames.Config, JSON.stringify(obj));
+
+			if("success" == msg){
+				alert("保存成功");
+				backMainPage();
+			}else{
+				alert(msg);
+			}
+		}
+	</script>
+
+</BODY>
+</HTML>

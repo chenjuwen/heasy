@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="delploy" default="main" basedir=".">
+	<target name="release">
+		<echo>generate local.properties file ...</echo>
+		<delete file="local.properties"/>
+		<copy file="build_local.properties" tofile="local.properties"/>
+
+		<echo>execute gradle script...</echo>
+    	<exec executable="cmd.exe" dir="${basedir}">
+			<arg line="/c ${basedir}/build_release.bat" />
+		</exec>
+
+		<echo>copy...</echo>
+        <copy todir="${artifactsDir}" encoding="utf-8">
+            <fileset dir="${basedir}/app/build/outputs/apk">
+            	<include name="*.apk"/>
+			</fileset>
+        </copy>
+		<echo>finish!</echo>
+	</target>
+	
+	<target name="main" depends="release"/>
+</project>

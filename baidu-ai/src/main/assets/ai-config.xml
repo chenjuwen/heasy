@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<!-- 语音合成 -->
+	<tts>
+		<appid>你的appid</appid>
+		<apikey>你的apikey</apikey>
+		<secretkey>你的secretkey</secretkey>
+		<person>0</person>
+		<speed>5</speed>
+	</tts>
+
+	<!-- 语音识别 -->
+	<asr>
+		<appid>你的appid</appid>
+		<apikey>你的apikey</apikey>
+		<secretkey>你的secretkey</secretkey>
+	</asr>
+
+	<!-- 人脸识别 -->
+	<face>
+		<appid>你的appid</appid>
+		<apikey>你的apikey</apikey>
+		<secretkey>你的secretkey</secretkey>
+	</face>
+
+	<!-- 翻译 -->
+	<translate>
+		<appid>你的appid</appid>
+		<secretkey>你的secretkey</secretkey>
+	</translate>
+
+</root>

@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<TITLE>广告播放</TITLE>
+	<link rel="stylesheet" type="text/css" href="css/mint.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+	<link rel="stylesheet" type="text/css" href="shutter/shutter.css" />
+
+	<script src="js/jquery.min-1.11.3.js"></script>
+	<script src="js/JSConstants.js"></script>
+	<script src="js/JSBridge.js"></script>
+	<script src="js/JSBridgeExt.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/mint.min.js"></script>
+
+	<script src="shutter/velocity.js"></script>
+	<script src="shutter/shutter.js"></script>
+
+	<style type="text/css">
+		body {
+			background-color: #ffffff;
+		}
+	</style>
+</HEAD>
+
+<BODY>
+	<div id="adApp" class="vue-mint-container">
+		<mt-header fixed title="广告播放">
+			<mt-button icon="back" slot="left" @click="_goback">返回</mt-button>
+		</mt-header>
+
+		<div style="padding:5px;">
+			<div align="center" style="margin-bottom:10px;">
+				<mt-button type="primary" size="small" @click="adPlay">播放</mt-button>&nbsp;
+				<mt-button type="primary" size="small" @click="adPause">暂停</mt-button>&nbsp;
+				<mt-button type="primary" size="small" @click="adMuted">静音[停|启]</mt-button>
+			</div>
+
+			<div>
+				<video id="adVideo" autoplay loop src="media/video.mp4"
+					width="350" height="150" style="background-color:#000000; width:100%;">
+					don't support html5
+				</video>
+			</div>
+		</div>
+
+		<!-- 广告图片切换 -->
+		<div class="shutter">
+			<!-- 图片列表 -->
+			<div class="shutter-img">
+				<a href="#" data-shutter-title="One"><img src="images/banner1.jpg"></a>
+				<a href="#" data-shutter-title="Two"><img src="images/banner2.jpg"></a>
+				<a href="#" data-shutter-title="Three"><img src="images/banner3.jpg"></a>
+				<a href="#" data-shutter-title="Four"><img src="images/banner4.jpg"></a>
+			</div>
+
+			<!-- 按钮：上一张、下一张 -->
+			<ul class="shutter-btn" style="display:;">
+				<li class="prev"></li>
+				<li class="next"></li>
+			</ul>
+
+			<!-- 图片标题 -->
+			<div class="shutter-desc" style="display:;">
+				<p>One</p>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		var adVM = new Vue({
+			el: '#adApp',
+			data: {
+				isMuted: false
+			},
+			methods: {
+				_goback: function(){
+					backMainPage();
+				},
+				adPlay: function(){
+					playVideo("adVideo");
+				},
+				adPause: function(){
+					pauseVideo("adVideo");
+				},
+				adMuted: function(){
+					this.isMuted = !this.isMuted;
+					mutedVideo("adVideo", this.isMuted);
+				}
+			}
+		});
+
+		function pageFinishCallback(){
+			
+		}
+
+		jQuery('.shutter').shutter({
+			shutterW: 350, // 容器宽度
+			shutterH: 150, // 容器高度
+			isAutoPlay: true, // 是否自动播放
+			playInterval: 3000, // 自动播放时间
+			curDisplay: 1, // 当前显示页
+			fullPage: false // 是否全屏展示
+		});
+	</script>
+
+</BODY>
+</HTML>

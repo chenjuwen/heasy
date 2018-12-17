@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<TITLE>相册图片切割</TITLE>
+	<link rel="stylesheet" type="text/css" href="css/mint.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+
+	<script src="js/jquery.min-1.11.3.js"></script>
+	<script src="js/JSConstants.js"></script>
+	<script src="js/JSBridge.js"></script>
+	<script src="js/JSBridgeExt.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/mint.min.js"></script>
+
+	<style type="text/css">
+		.mint-cell-wrapper {
+			background-image: none;
+		}
+
+		.mint-cell:last-child {
+			background-image: none;
+		}
+	</style>
+</HEAD>
+
+<BODY style="background-color:#F0FFFF;">
+	<div id="imageApp" class="vue-mint-container">
+		<mt-header fixed title="相册图片切割">
+			<mt-button icon="back" slot="left" @click="_goback">返回</mt-button>
+		</mt-header>
+
+		<div style="padding:10px; text-align:center;">
+			<div>
+				<img :src="imagePath" width="340" height="400"/>
+			</div>
+
+			<div style="text-align:center; margin-top:10px;">
+				<mt-button type="primary" size="small" @click="selectPicture" style="width:100px;">选择图片</mt-button>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		var imageVM = new Vue({
+			el: '#imageApp',
+			data: {
+				imagePath: ""
+			},
+			methods: {
+				_goback: function(){
+					backMainPage();
+				},
+				selectPicture: function(){
+					this.imagePath = "";
+					var obj = {"callback":"com.heasy.app.action.callback.AlbumPictureCallback"};
+					jsBridge.dispatchAction("PictureCrop", JSON.stringify(obj));
+				}
+			}
+		});
+
+		function pictureCallback(path){
+			imageVM.imagePath = path + "?t=" + (new Date()).getTime();
+		}
+
+		function pageFinishCallback(){
+			
+		}
+	</script>
+
+</BODY>
+</HTML>

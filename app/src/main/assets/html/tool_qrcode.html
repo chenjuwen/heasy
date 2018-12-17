@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<TITLE>二维码</TITLE>
+	<link rel="stylesheet" type="text/css" href="css/mint.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+
+	<script src="js/jquery.min-1.11.3.js"></script>
+	<script src="js/JSConstants.js"></script>
+	<script src="js/JSBridge.js"></script>
+	<script src="js/JSBridgeExt.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/mint.min.js"></script>
+
+	<style type="text/css">
+		.mint-cell-wrapper {
+			background-image: none;
+		}
+
+		.mint-field-core{
+			border-bottom: 1px solid #d9d9d9;
+		}
+	</style>
+</HEAD>
+
+<BODY style="background-color:#EEEED1;">
+	<div id="qrcodeApp" class="vue-mint-container">
+		<mt-header fixed title="二维码">
+			<mt-button icon="back" slot="left" @click="_goback">返回</mt-button>
+		</mt-header>
+
+		<div style="padding:5px;">
+			<div style="padding:5px 0 0 0; background-color:#ffffff;">
+				<mt-button type="primary" size="small" @click="createQRcode" style="margin-bottom:10px;">生成二维码</mt-button>
+				<mt-field label="输入内容：" v-model.trim="content1"></mt-field>
+				<img :src="imagePath" width="150" height="150" v-show="imagePath" style="margin:10px;">
+			</div>
+
+			<div style="margin:50px 0; padding-top:5px; background-color:#ffffff;">
+				<mt-button type="primary" size="small" @click="scanQRcode" style="margin-bottom:10px;">扫二维码</mt-button>
+				<mt-field label="扫描结果：" v-model.trim="content2" readonly></mt-field>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		var qrcodeVM = new Vue({
+			el: '#qrcodeApp',
+			data: {
+				imagePath: "",
+				content1: "",
+				content2: ""
+			},
+			methods: {
+				_goback: function(){
+					backMainPage();
+				},
+				createQRcode: function(){
+					if(this.content1 == ""){
+						this.$toast({
+							message: '请输入二维码内容',
+							duration: 1500
+						});
+						return;
+					}
+
+					this.imagePath = "";
+					
+					var obj = {"content":this.content1, "size":"150"};
+					var path = jsBridge.dispatchAction("Qrcode", JSON.stringify(obj), "create");
+					this.imagePath = path;
+				},
+				scanQRcode: function(){
+					this.content2 = "";
+					
+					var obj = {"decodeContent":"0"};
+					jsBridge.dispatchAction("Qrcode", JSON.stringify(obj), "scan");					
+				}
+			}
+		});
+
+		function scanCallback(content){
+			qrcodeVM.content2 = content;
+		}
+
+		function pageFinishCallback(){
+			
+		}
+	</script>
+
+</BODY>
+</HTML>

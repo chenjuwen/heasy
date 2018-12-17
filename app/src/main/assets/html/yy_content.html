@@ -1,0 +1,237 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<TITLE>课程内容</TITLE>
+	<link rel="stylesheet" type="text/css" href="css/mint.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+
+	<script src="js/jquery.min-1.11.3.js"></script>
+	<script src="js/JSConstants.js"></script>
+	<script src="js/JSBridge.js"></script>
+	<script src="js/JSBridgeExt.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/mint.min.js"></script>
+
+	<style type="text/css">
+		.mint-cell-wrapper {
+			background-image:none;
+		}
+
+		.data-container {
+			border-top: 1px solid #d9d9d9;
+		}
+
+		.data-container .mint-cell-text {
+			font-size: 16px;
+			padding-left: 25px;
+		}
+
+		.data-container .mint-cell-label {
+			font-size: 15px;
+			padding-left: 25px;
+		}
+	</style>
+</HEAD>
+
+<BODY>
+	<div id="app" class="vue-mint-container">
+		<mt-header fixed title="课程内容">
+			<mt-button icon="back" slot="left" @click="_goback">返回</mt-button>
+			<mt-button slot="right" @click="_actionSheet">
+				<img src="images/add.png" width="20" height="20">
+			</mt-button>
+		</mt-header>
+
+		<mt-actionsheet :actions="actionsheetData1" v-model="sheetVisible1"> </mt-actionsheet>
+
+		<div class="data-container">
+			<div @click.stop="_cell(item.id, item.type)" v-for="item in resultData">
+				<mt-cell :title="item.title" :label="item.content" is-link>
+					<img :src="'images/yy' + item.type + '.png'" width="24" height="24" style="position:absolute; left:0; top:10px; margin-left:5px;">
+					<img src="images/play.png" v-show="item.filePath" width="25" height="25" style="margin-right:10px; z-index:100;" @click.stop="_playVoice(item.id)" />
+				</mt-cell>
+			</div>
+		</div>
+
+		<mt-actionsheet :actions="actionsheetData2" v-model="sheetVisible2"> </mt-actionsheet>
+	</div>
+
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				gradeId: "",
+				unitId: "",
+
+				resultData: [
+					//{id:"1", title:"111", content:"11111", type:"1", filePath:"123"},
+					//{id:"2", title:"222", content:"22222", type:"2", filePath:""},
+					//{id:"3", title:"333", content:"33333", type:"3"}
+				],
+
+				dataKey: "",
+				dataType: "",
+
+				sheetVisible1: false,
+				actionsheetData1: [
+					{name:"添加单词", method:addWord},
+					{name:"添加句子", method:addSentence},
+					{name:"添加文章", method:addArticle},
+					{name:"批量添加单词", method:batchAddWord},
+					{name:"批量添加句子", method:batchAddSentence},
+					{name:"批量生成语音文件", method:batchCreate},
+					{name:"批量播放语音文件", method:batchPlay}
+				],
+
+				sheetVisible2: false,
+				actionsheetData2: [
+					{name:"生成语音文件", method:createVoice},
+					{name:"修改", method:editContent},
+					{name:"删除", method:deleteContent}
+				]
+			},
+			methods: {
+				_goback: function(){
+					backPage("yy_unit_list.html", "gradeId="+this.gradeId);
+				},
+				_actionSheet: function(){
+					this.sheetVisible1 = true;
+				},
+
+				_cell: function(id, type){
+					this.sheetVisible2 = true;
+					this.dataKey = id;
+					this.dataType = type;
+				},
+				_playVoice: function(id){
+					var obj = {"id":id};
+					var msg = jsBridge.dispatchAction("YYContent", JSON.stringify(obj), "play_voice");
+				}
+			}
+		});
+
+		function pageFinishCallback(){
+			vm.gradeId = getPageParameter("gradeId");
+			vm.unitId = getPageParameter("unitId");
+			queryData();
+		}
+
+		function queryData(){
+			var obj = {"unitId":vm.unitId};
+			var result = jsBridge.dispatchAction("YYContent", JSON.stringify(obj), "getContentList");
+
+			if(result != null){
+				vm.resultData = jQuery.parseJSON(result);
+			}else{
+				vm.resultData = [];
+			}
+
+			if(vm.resultData == null || vm.resultData.length <= 0){
+				vm.$toast({
+					message: '无数据',
+					duration: 1500
+				});
+			}
+		}
+
+	    function addWord() {
+			var obj = {"parameters":"gradeId=" + vm.gradeId + "&unitId="+vm.unitId+"&type=1", "url":"yy_content_add.html"};
+			jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj));
+		}
+
+	    function addSentence() {
+			var obj = {"parameters":"gradeId=" + vm.gradeId + "&unitId="+vm.unitId+"&type=2", "url":"yy_content_add.html"};
+			jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj));
+		}
+
+	    function addArticle() {
+			var obj = {"parameters":"gradeId=" + vm.gradeId + "&unitId="+vm.unitId+"&type=3", "url":"yy_content_add.html"};
+			jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj));
+		}
+
+
+	    function batchAddWord() {
+			var obj = {"parameters":"gradeId=" + vm.gradeId + "&unitId="+vm.unitId+"&type=1", "url":"yy_content_batchAdd.html"};
+			jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj));
+		}
+
+	    function batchAddSentence() {
+			var obj = {"parameters":"gradeId=" + vm.gradeId + "&unitId="+vm.unitId+"&type=2", "url":"yy_content_batchAdd.html"};
+			jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj));
+		}
+
+		function batchCreate(){
+			if(vm.resultData == null || vm.resultData.length <= 0){
+				vm.$toast({
+					message: '无数据',
+					duration: 1500
+				});
+				return;
+			}
+			
+			var obj = {"unitId":vm.unitId};
+			var msg = jsBridge.dispatchAction("YYContent", JSON.stringify(obj), "batchCreateVoice");
+			if("success" == msg){
+				vm.$toast({
+					message: '批量生成开始',
+					duration: 1500
+				});
+			}else{
+				alert(msg);
+			}
+		}
+
+		function batchCreateFinish(){
+			vm.$toast({
+				message: '批量生成完成',
+				duration: 1500
+			});
+			queryData();
+		}
+
+		function batchPlay(){
+			if(vm.resultData == null || vm.resultData.length <= 0){
+				vm.$toast({
+					message: '无数据',
+					duration: 1500
+				});
+				return;
+			}
+			
+			var obj = {"unitId":vm.unitId};
+			var msg = jsBridge.dispatchAction("YYContent", JSON.stringify(obj), "batchPlayVoice");
+			if("success" == msg){
+				vm.$toast({
+					message: '批量播放开始',
+					duration: 1500
+				});
+			}else{
+				alert(msg);
+			}
+
+		}
+
+		function createVoice(){
+			var obj = {"id":vm.dataKey, "iType":"api", "isPlay":"1"};
+			jsBridge.dispatchAction("YYContent", JSON.stringify(obj), "create_voice");
+			
+			var obj = {"parameters": "gradeId=" + vm.gradeId + "&unitId="+vm.unitId, "url":"yy_content.html"};
+			jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj));
+		}
+
+		function editContent(){
+			var obj = {"id":vm.dataKey, "gradeId":vm.gradeId, "url":"yy_content_edit.html"};
+			jsBridge.dispatchAction("YYContent", JSON.stringify(obj), "edit");
+		}
+
+		function deleteContent(){
+			if(confirm("确定要删除？")){
+				var obj = {"id":vm.dataKey};
+				jsBridge.dispatchAction("YYContent", JSON.stringify(obj), "delete");
+				queryData();
+			}
+		}
+	</script>
+
+</BODY>
+</HTML>

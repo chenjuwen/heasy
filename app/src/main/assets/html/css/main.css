@@ -1,0 +1,41 @@
+.distance_header{
+    margin-top: 45px;
+}
+
+body {
+    background-color: white;
+}
+
+.bgWhite{
+    background-color: white;
+}
+
+.mui-content {
+    background-color: white;
+}
+
+.mui-content .title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.mui-btn-block {
+    padding: 5px 0;
+}
+
+/* 导航条样式 */
+.mui-bar {
+    background-color: #FFFAFA;
+}
+.mui-title {
+    color: #36648B;
+    font-weight: 600;
+}
+.mui-bar-tab .mui-tab-item {
+    color: #36648B;
+}
+
+/* tab样式 */
+.mui-bar-tab .mui-tab-item.mui-active {
+    color: #EE5C42;
+}

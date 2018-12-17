@@ -1,0 +1,295 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<TITLE>全局搜索</TITLE>
+	<link rel="stylesheet" type="text/css" href="css/mint.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/muse-ui.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+
+	<script src="js/jquery.min-1.11.3.js"></script>
+	<script src="js/JSConstants.js"></script>
+	<script src="js/JSBridge.js"></script>
+	<script src="js/JSBridgeExt.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/mint.min.js"></script>
+	<script src="js/muse-ui.js"></script>
+
+	<style type="text/css">
+		.data-container {
+			margin-top: 45px;
+			border-top: 2px solid #d9d9d9;
+			border-bottom: 2px solid #d9d9d9;
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 15px;
+		}
+
+		.data-container .data-td {
+			border-bottom:1px solid #d9d9d9;
+			height: 40px;
+			padding: 3px 10px 3px 3px;
+		}
+
+		.data-container .data-td .category1 {
+			display: block;
+		}
+
+		.data-container .data-td .category2 {
+			display: block;
+			width: 100%;
+			text-align: right;
+			margin-top: 3px;
+		}
+
+		.data-container .data-td .title {
+			display: block;
+		}
+
+		.data-container .data-td .content {
+			display: block;
+			color: #666;
+			margin-top: 3px;
+		}
+
+		.mint-button {
+			height: 30px;
+		}
+
+		.mint-button-text {
+			font-size: 15px;
+		}
+
+		.mint-field .mint-cell-title {
+			width: 50px;
+		}
+
+		.mint-cell-title {
+			flex: 0.35;
+		}
+
+		/* dropdown menu */
+		.mu-menu-activator {
+			height: 40px;
+		}
+
+		.mu-primary-color {
+			background-color: #fff;
+		}
+
+		.mu-inverse {
+			color: #444;
+		}
+
+		.mu-raised-button {
+			webkit-box-shadow: none;
+			box-shadow: none;
+			min-width: 30px;
+			background-color: #26a2ff;
+			border-radius: 5px;
+			color: white;
+		}
+
+		.mu-raised-button .mu-button-wrapper {
+			padding: 0 10px;
+		}
+
+		.mu-item {
+			height: 35px;
+		}
+
+		.mu-item-title {
+			font-size: 14px;
+		}
+
+		.selected-menu-text {
+			font-size: 15px;
+			border-bottom:1px solid #d9d9d9;
+			display: inline-block;
+			width: 100px;
+			padding: 6px;
+		}
+	</style>
+</HEAD>
+
+<BODY>
+	<div id="app" class="vue-mint-container">
+		<mt-header fixed title="全局搜索">
+			<mt-button icon="back" slot="left" @click="_goback">返回</mt-button>
+		</mt-header>
+
+		<div>
+			<div style="background-color:#fff; padding-left:10px;">
+				<mu-menu cover1>
+					<mu-button color="primary">年级</mu-button>
+
+					<mu-list slot="content">
+						<mu-list-item button @click="menu_grade_item_click(-1, '')">
+							<mu-list-item-title>清除值</mu-list-item-title>
+						</mu-list-item>
+
+						<template v-for="(item, index) in gradeList">
+							<mu-list-item button @click="menu_grade_item_click(item.id, item.name)">
+								<mu-list-item-title>{{ item.name }}</mu-list-item-title>
+							</mu-list-item>
+						</template>
+					</mu-list>
+				</mu-menu>
+				<span class="selected-menu-text">{{ selectGradeName }}&nbsp;</span>
+
+				<mu-menu cover1>
+					<mu-button color="primary">单元</mu-button>
+
+					<mu-list slot="content">
+						<mu-list-item button @click="menu_unit_item_click(-1, '')">
+							<mu-list-item-title>清除值</mu-list-item-title>
+						</mu-list-item>
+
+						<template v-for="(item, index) in unitList">
+							<mu-list-item button @click="menu_unit_item_click(item.id, item.name)">
+								<mu-list-item-title>{{ item.name }}</mu-list-item-title>
+							</mu-list-item>
+						</template>
+					</mu-list>
+				</mu-menu>
+				<span class="selected-menu-text">{{ selectUnitName }}&nbsp;</span>
+			</div>
+
+			<div style="float:left; width:100%;">
+				<mt-field label="内容:" v-model.trim="yyContent"></mt-field>
+			</div>
+
+			<div style="float:right; position:absolute; right:0; margin-top:8px; margin-right:10px;">
+				<mt-button type="primary" size="normal" @click="_query">查询</mt-button>
+				<mt-button type="primary" size="normal" @click="_batchPlay">批量播放</mt-button>
+			</div>
+		</div>
+
+		<br>
+		<table class="data-container" border=0>
+			<tr v-for="item in resultData" class="data-tr">
+				<td class="data-td" width="10" style="padding: 3px 5px 3px 5px;">
+					<img :src="'images/yy' + item.type + '.png'" width="24" height="24">
+				</td>
+				<td class="data-td" width="90">
+					<span class="category1">{{ item.categoryName1 }}</span>
+					<span class="category2">{{ item.categoryName2 }}</span>
+				</td>
+				<td class="data-td">
+					<span class="title">{{ item.title }}</span>
+					<span class="content">{{ item.content }}</span>
+				</td>
+				<td class="data-td" width="30" align="center">
+					<img src="images/play.png" v-show="item.filePath" width="25" height="25" @click.stop="_playVoice(item.id)" />
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<script type="text/javascript">
+		var currentIndex = 0;
+
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				gradeList: [],
+				selectGradeId: "",
+				selectGradeName: "",
+
+				unitList: [],
+				selectUnitId: "",
+				selectUnitName: "",
+
+				yyContent: "",
+				resultData: [
+					//{id:"1", title:"What's in your schoolbag?", content:"你的书包里有什么？", filePath:"123", type:"1", categoryName1:"三年级上册", categoryName2:"Unit 1"}
+					//,{id:"2", title:"222", content:"22222", filePath:"", type:"2", categoryName1:"category name1", categoryName2:"category name2"}
+					//,{id:"3", title:"333", content:"33333", filePath:"", type:"3", categoryName1:"category name1", categoryName2:"category name2"}
+				]
+			},
+			methods: {
+				_goback: function(){
+					backMainPage();
+				},
+				_query: function(){
+					queryData();
+				},
+				_playVoice: function(id){
+					var obj = {"id":id};
+					var msg = jsBridge.dispatchAction("YYContent", JSON.stringify(obj), "play_voice");
+				},
+				_batchPlay: function(){
+					currentIndex = 0;
+					if(vm.resultData != null && vm.resultData.length > 0){
+						setTimeout(batchPlay, 2000);
+					}
+				},
+				menu_grade_item_click: function(id, name){
+					if(id != -1){
+						this.selectGradeId = id;
+						this.selectGradeName = name;
+
+						var obj = {"gradeId": id};
+						var unitList = jsBridge.dispatchAction("YYGrade", JSON.stringify(obj), "getUnitList");
+						vm.unitList = jQuery.parseJSON(unitList);
+					}else{
+						this.selectGradeId = "";
+						this.selectGradeName = "";
+						vm.unitList = [];
+					}
+				},
+				menu_unit_item_click: function(id, name){
+					if(id != -1){
+						this.selectUnitId = id;
+						this.selectUnitName = name;
+					}else{
+						this.selectUnitId = "";
+						this.selectUnitName = "";
+					}
+				}
+			}
+		});
+
+		function batchPlay(){
+			var id = vm.resultData[currentIndex].id;
+			var obj = {"id":id};
+			jsBridge.dispatchAction("YYContent", JSON.stringify(obj), "play_voice");
+
+			++currentIndex;
+			if(currentIndex < vm.resultData.length){
+				setTimeout(batchPlay, 2000);
+			}
+		}
+
+		function pageFinishCallback(){
+			var gradeList = jsBridge.dispatchAction("YYGrade", "", "getGradeList");
+			vm.gradeList = jQuery.parseJSON(gradeList);
+		}
+
+		function queryData(){
+			if(vm.selectGradeId == "" && vm.selectUnitId == "" && vm.yyContent == ""){
+				vm.$toast({
+					message: '查询条件不能为空!',
+					duration: 1500
+				});
+				return;
+			}
+
+			var obj = {"gradeId":vm.selectGradeId, "unitId":vm.selectUnitId, "yyContent":vm.yyContent};
+			var result = jsBridge.dispatchAction("YYContent", JSON.stringify(obj), "globalSearch");
+
+			if(result != null){
+				vm.resultData = jQuery.parseJSON(result);
+				if(vm.resultData.length <= 0){
+					vm.$toast({
+						message: '查无数据',
+						duration: 1500
+					});
+				}
+			}else{
+				vm.resultData = [];
+			}
+		}
+	</script>
+
+</BODY>
+</HTML>

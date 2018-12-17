@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<!-- sdcard存储的根目录：db文件复制到该目录，文件生成存储目录 -->
+	<sdcardRootPath>/sdcard/pplay/</sdcardRootPath>
+
+	<!-- SQLite数据库参数 -->
+	<dbName>pplay.db</dbName>
+	<dbPassword></dbPassword>
+	<dbVersion>1</dbVersion>
+
+	<!-- 倒计时间隔毫秒值 -->
+	<countDownInterval>1000</countDownInterval>
+	<countDownTimeoutPage>timeout.html</countDownTimeoutPage>
+
+	<!-- Action类所在的根包路径，多个路径用分号(;)分隔 -->
+	<actionBasePackage>com.heasy.app.action</actionBasePackage>
+
+	<!-- Service类所在的根包路径，多个路径用分号(;)分隔 -->
+	<serviceBasePackage>com.heasy.app</serviceBasePackage>
+
+	<!-- webview加载html页面的根路径 -->
+	<webviewLoadBasePath>file:///android_asset/html/</webviewLoadBasePath>
+
+	<!-- webview的入口html页面 -->
+	<webviewMainPage>main.html</webviewMainPage>
+
+</root>

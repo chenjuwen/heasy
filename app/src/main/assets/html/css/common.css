@@ -1,0 +1,53 @@
+body {
+	padding: 0;
+	margin: 0;
+}
+
+.vue-mint-container {
+    padding-top: 45px;
+}
+
+.picker-toolbar {
+    padding-top: 4px;
+    border-bottom: 1px solid #CCC;
+}
+
+/* header */
+.mint-header {
+	background-color: #607d8b;
+}
+
+.mint-header-title {
+	font-weight: 600;
+	font-size: 15px;
+}
+
+/* form */
+.form-phase {
+    background-color: #CCC;
+    margin-top: 10px;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+.form-phase-title {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 5px 5px 5px;
+}
+
+/* tabbar */
+.mint-tabbar {
+	border-top: 1px solid #d9d9d9;
+	background-image: none;
+	background-color: #FFF;
+}
+
+.mint-tabbar>.mint-tab-item.is-selected {
+	background-color: #FFF;
+	font-weight: 600;
+	color: red;
+}
+
+.mint-tab-item-label {
+	font-size: 13px;
+}

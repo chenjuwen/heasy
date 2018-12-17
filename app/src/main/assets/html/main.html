@@ -1,0 +1,308 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<TITLE>辅学通</TITLE>
+	<link rel="stylesheet" type="text/css" href="css/mint.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+
+	<script src="js/jquery.min-1.11.3.js"></script>
+	<script src="js/JSConstants.js"></script>
+	<script src="js/JSBridge.js"></script>
+	<script src="js/JSBridgeExt.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/mint.min.js"></script>
+
+	<style type="text/css">
+		.field-textarea-container {
+			border-bottom: 1px solid #d9d9d9;
+			margin: 0 5px 5px 5px;
+			border-left: 1px solid #d9d9d9;
+			border-right: 1px solid #d9d9d9;
+		}
+
+		.img-container {
+			margin: 0 5px 5px 5px;
+		}
+
+		.field-btton-container {
+			margin: 0 5px 5px 5px;
+			text-align: center;
+		}
+
+		.mint-cell {
+			min-height: 50px;
+		}
+
+		#divLang {
+			padding: 0 5px 0 5px;
+			border-top: 1px solid #d9d9d9;
+		}
+
+		#divLang .mint-cell {
+			min-height: 40px;
+			float: left;
+			background-size: 120% 0px;
+		}
+
+		#divLang .mint-radiolist-title {
+			display: none;
+		}
+
+		#divLang .mint-cell-wrapper {
+			padding: 0;
+			background-size: 120% 0px;
+		}
+
+		.mint-cell:last-child {
+			background-position: inherit;
+		}
+
+		.mint-button-text {
+			font-size: 16px;
+		}
+
+		#divExitApp .mint-cell {
+			background-color: #FFFAFA;
+		}
+
+		#divExitApp .mint-cell-title {
+			text-align: center;
+			color: #36648B;
+			font-size: 18px;
+			font-weight: 600;
+		}
+
+		#divNotification .mint-cell-title {
+			text-align: center;
+			color: #000000;
+			font-size: 16px;
+		}
+
+		/* tools */
+		.tools {
+			padding: 5px 0;
+			width: 100%;
+		}
+		.tools table {
+			border: 1px solid #eee;
+			border-collapse: collapse;
+		}
+		.tools td {
+			text-align: center;
+			border: 1px solid #eee;
+			padding: 20px 0;
+		}
+		.tools img {
+			width: 70px;
+			height: 70px;
+		}
+		.tools span {
+			display: block;
+			color: 14px;
+			margin: 3px;
+		}
+	</style>
+</HEAD>
+<BODY>
+	<div id="app" class="vue-mint-container">
+		<mt-header fixed title="辅学通"></mt-header>
+
+		<mt-tab-container v-model="selectedTab">
+			<mt-tab-container-item id="tab1">
+				<div v-for="item in gradeList" @click="showUnit(item.id)">
+					<mt-cell :title="item.name" is-link></mt-cell>
+				</div>
+
+				<div @click="changePage('yy_globalSearch.html')" style="border-bottom:1px solid #d9d9d9">
+					<mt-cell title="全局搜索" is-link></mt-cell>
+				</div>
+			</mt-tab-container-item>
+
+			<mt-tab-container-item id="tab2" style="display:none;">
+				<div class="field-textarea-container">
+					<mt-field label="" type="textarea" rows="8" v-model.trim="transFrom"></mt-field>
+				</div>
+
+				<div class="field-btton-container">
+					<mt-button type="primary" size="small" @click="translate('zh')">译成中文</mt-button>&nbsp;&nbsp;
+					<mt-button type="primary" size="small" @click="translate('en')">译成英文</mt-button>
+				</div>
+
+				<div class="field-textarea-container">
+					<mt-field label="" type="textarea" rows="9" v-model.trim="transTo"></mt-field>
+				</div>
+			</mt-tab-container-item>
+
+			<mt-tab-container-item id="tab22" style="display:none;">
+				<div class="field-textarea-container">
+					<mt-field label="" type="textarea" rows="16" v-model="speechResult"></mt-field>
+				</div>
+
+				<div id="divLang">
+					<mt-cell title="语言:">
+						<mt-radio title="" v-model="lang" :options="['普通话']"> </mt-radio>
+						<mt-radio title="" v-model="lang" :options="['粤语']"> </mt-radio>
+						<mt-radio title="" v-model="lang" :options="['英语']"> </mt-radio>
+					</mt-cell>
+				</div>
+
+				<div class="field-btton-container" style="clear:both;">
+					<mt-button type="primary" size="small" @click="speechStart">开始识别</mt-button>&nbsp;&nbsp;
+					<mt-button type="primary" size="small" @click="speechStop">停止识别</mt-button>
+				</div>
+			</mt-tab-container-item>
+
+			<mt-tab-container-item id="tab3" style="display:none; margin-bottom:65px;">
+				<div class="tools">
+					<table align="center">
+						<tr>
+							<td width="33%"><img src="images/tool_translate.png" title="翻译" @click="selectTool('translate')"><span>翻译</span></td>
+							<td width="33%"><img src="images/tool_recognition.png" title="语音识别" @click="selectTool('recognition')"><span>语音识别</span></td>
+							<td><img src="images/tool_synthetize.png" title="语音合成" @click="selectTool('synthetize')"><span>语音合成</span></td>
+						</tr>
+						<tr>
+							<td><img src="images/tool_image.png" title="图片识别" @click="selectTool('image')"><span>图片识别</span></td>
+							<td><img src="images/tool_idcard.png" title="身份证识别" @click="selectTool('idcard')"><span>身份证识别</span></td>
+							<td><img src="images/tool_driver.png" title="驾驶证识别" @click="selectTool('drivingLicense')"><span>驾驶证识别</span></td>
+						</tr>
+						<tr>
+							<td><img src="images/tool_album.png" title="相册图片切割" @click="selectTool('album')"><span>相册图片切割</span></td>
+							<td><img src="images/tool_face.png" title="人脸检测" @click="selectTool('face')"><span>人脸检测</span></td>
+							<td><img src="images/tool_takephoto.png" title="自定义拍照界面" @click="selectTool('takephoto')"><span>自定义拍照界面</span></td>
+						</tr>
+						<tr>
+							<td><img src="images/tool_qrcode.png" title="二维码" @click="selectTool('qrcode')"><span>二维码</span></td>
+							<td><img src="images/tool_ad.png" title="广告播放" @click="selectTool('ad')"><span>广告播放</span></td></span></td>
+						</tr>
+					</table>
+				</div>
+			</mt-tab-container-item>
+
+			<mt-tab-container-item id="tab4" style="display:none;">
+				<div @click="changePage('about.html')" style="margin-top:10px; border-bottom:1px solid #d9d9d9; ">
+					<mt-cell title="关于" is-link></mt-cell>
+				</div>
+
+				<div id="divNotification" @click="notify" style="margin-top:20px; border-bottom:1px solid #d9d9d9; ">
+					<mt-cell title="发送通知"></mt-cell>
+				</div>
+
+				<div id="divExitApp" @click="exitApp" style="margin-top:20px; border-bottom:1px solid #d9d9d9; ">
+					<mt-cell title="退出应用"></mt-cell>
+				</div>
+			</mt-tab-container-item>
+		</mt-tab-container>
+
+		<mt-tabbar fixed v-model="selectedTab">
+			<mt-tab-item id="tab1">
+				<img slot="icon" src="images/english.png">英语
+			</mt-tab-item>
+			<mt-tab-item id="tab2">
+				<img slot="icon" src="images/translate.png">翻译
+			</mt-tab-item>
+			<mt-tab-item id="tab22">
+				<img slot="icon" src="images/recognition.png">语音识别
+			</mt-tab-item>
+			<mt-tab-item id="tab3">
+				<img slot="icon" src="images/tools.png">工具
+			</mt-tab-item>
+			<mt-tab-item id="tab4">
+				<img slot="icon" src="images/settings.png">设置
+			</mt-tab-item>
+		</mt-tabbar>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				gradeList: [
+					//{id:"1", name:"111"},
+					//{id:"2", name:"222"}
+				],
+
+				selectedTab: "tab1",
+
+				transFrom: "",
+				transTo: "",
+
+				lang: "普通话",
+				speechResult: ""
+			},
+			methods: {
+				changePage: function(pageURL, actionName, extend){
+					var obj = {"url":pageURL};
+
+					if(actionName != null && actionName != ""){
+						jsBridge.dispatchAction(actionName, JSON.stringify(obj), extend);
+					}else{
+						jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj), extend);
+					}
+				},
+				showUnit: function(gradeId){
+					var obj = {"parameters": "gradeId="+gradeId, "url": "yy_unit_list.html"};
+					jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj));
+				},
+				translate: function(transType){ //翻译
+					var obj = {"content":this.transFrom, "transType": transType};
+					var result = jsBridge.dispatchAction("Translate", JSON.stringify(obj));
+					this.transTo = result;
+				},
+				speechStart: function(){ //开始识别
+					this.speechResult = "";
+					var obj = {"lang": this.lang};
+					jsBridge.dispatchAction(actionNames.Speech, JSON.stringify(obj), "start");
+				},
+				speechStop: function(){ //结束识别
+					jsBridge.dispatchAction(actionNames.Speech, "", "stop");
+				},
+				selectTool: function(toolName){
+					if(toolName == "translate"){
+						this.selectedTab = "tab2";
+					}else if(toolName == "recognition"){
+						this.selectedTab = "tab22";
+					}else{
+						var obj = {"url":"tool_" + toolName + ".html"};
+						jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj), "");
+					}
+				},
+				notify: function(){
+					var data = {"id":1};
+					var obj = {"title":"天气预报", "content":"广州，多云，7～11度，微风", "data":JSON.stringify(data)};
+					jsBridge.dispatchAction("Notification", JSON.stringify(obj));
+				},
+				exitApp: function(){
+					if(confirm("确定要退出应用？")){
+						jsBridge.dispatchAction(actionNames.ExitApp, "", "");
+					}
+				}
+			},
+			watch: {
+				//监听selectedTab属性的值
+				selectedTab: function(val){
+					var obj = {"key":"currentTab", "value":val};
+					jsBridge.dispatchAction(actionNames.GlobalCache, JSON.stringify(obj), "set");
+				}
+			}
+		})
+	</script>
+
+	<script type="text/javascript">
+		//页面加载完成后，触发该方法
+        function pageFinishCallback(){
+        	var obj = {"key":"currentTab"};
+        	var currentTab = jsBridge.dispatchAction(actionNames.GlobalCache, JSON.stringify(obj), "get");
+			if(currentTab != ""){
+				vm.selectedTab = currentTab;
+			}
+
+			var gradeList = jsBridge.dispatchAction("YYGrade", "", "getGradeList");
+			vm.gradeList = jQuery.parseJSON(gradeList);
+        }
+
+        function speechCallback(content){
+        	vm.speechResult += content + "\n";
+        }
+    </script>
+</BODY>
+</HTML>

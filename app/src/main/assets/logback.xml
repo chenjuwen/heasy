@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration debug="false" scan="false" scanPeriod="90 seconds">
+    <property name="LOG_DIR" value="/sdcard/heasy/logs"/>
+	<property name="LOG_LEVEL" value="DEBUG"/>
+	<property name="LOG_MAX_HISTORY" value="90"/>
+	<timestamp key="LOG_DATE" datePattern="yyyyMMdd"/>
+
+	<appender name="logcat" class="ch.qos.logback.classic.android.LogcatAppender">
+		<encoder>
+			<pattern>[%logger{50} : %line] - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="main" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_DIR}/heasy${LOG_DATE}.txt</file>
+		<append>true</append>
+		<Encoding>UTF-8</Encoding>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_DIR}/heasy%d{yyyyMMdd}.%i.txt</fileNamePattern>
+			<maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>64MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level [%logger{50} : %line] - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="device" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_DIR}/Device${LOG_DATE}.txt</file>
+		<append>true</append>
+		<Encoding>UTF-8</Encoding>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_DIR}/Device%d{yyyyMMdd}.%i.txt</fileNamePattern>
+			<maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>64MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level [%logger{50} : %line] - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<root level="${LOG_LEVEL}">
+		<appender-ref ref="logcat" />
+		<appender-ref ref="main"/>
+	</root>
+
+	<logger name="DeviceLogger" level="${LOG_LEVEL}" additivity="false">
+		<appender-ref ref="logcat" />
+		<appender-ref ref="device"/>
+	</logger>
+  	
+</configuration>
