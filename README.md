@@ -46,6 +46,28 @@ Android Studio
 	&nbsp;&nbsp;&nbsp;&nbsp;返回值：  
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;无  
 
+#### Java端 --> JS端  
+##### executeFunction方法  
+功能：用于执行客户端指定的内置的JS方法。内置的JS方法在JSBridge.js文件中定义。  
+方法体：public void executeFunction(String funcName, String data);  
+	&nbsp;&nbsp;&nbsp;&nbsp;参数说明：  
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;funcName：内置的JS方法，主要有CountDown、BindData、BindAppendedData等。  
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data：传入方法的数据内容  
+范例：  
+	&nbsp;&nbsp;&nbsp;&nbsp;//数据绑定：设置控件id为password的value值为123  
+	&nbsp;&nbsp;&nbsp;&nbsp;String jsonData = FastjsonUtil.toJSONString("elementId", "password", "content", "123");  
+	&nbsp;&nbsp;&nbsp;&nbsp;heasyContext.getJsInterface().executeFunction("BindData", jsonData);  
+
+##### 执行自定义的JS方法  
+定义JS方法：  
+	&nbsp;&nbsp;&nbsp;&nbsp;function takePhotoCallback(imagePath){  
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//逻辑代码  
+	&nbsp;&nbsp;&nbsp;&nbsp;}  
+
+调用JS方法：  
+	&nbsp;&nbsp;&nbsp;&nbsp;String script = "javascript: try{ takePhotoCallback(\"" + imageFilePath + "\"); }catch(e){ }";  
+	&nbsp;&nbsp;&nbsp;&nbsp;heasyContext.getJsInterface().loadUrl(script);  
+
 
 ## 技术交流  
 <img src="https://github.com/chenjuwen/heasy/blob/master/doc/author.jpg" width="150" height="200"/>  
