@@ -2,7 +2,7 @@
 heasy是一个基于Android平台的APP混合开发框架，页面层集成jquery、VUE、mint-ui、muse-ui等前端框架，具有容易使用、扩展性好、灵活性强、易维护等特性。  
 
 ## 架构图   
-<img src="https://github.com/chenjuwen/heasy/tree/master/doc/design-pic.jpg" width="600" height="400"/> 
+<img src="https://github.com/chenjuwen/heasy/blob/master/doc/design-pic.jpg" width="600" height="400"/> 
 
 框架的主要扩展点：  
     1、	Action类  
@@ -26,10 +26,10 @@ Android Studio
 	语音合成、语音识别、人脸识别和中英文翻译的接口参数需要更新到baidu-ai\src\main\assets\ai-config.xml 配置文件中。  
 
 ### 使用指南  
-<a href="https://github.com/chenjuwen/heasy/tree/master/doc/heasy_guide.docx" target="_blank">heasy使用指南</a>  
+<a href="https://github.com/chenjuwen/heasy/blob/master/doc/heasy_guide.docx" target="_blank">heasy使用指南</a>  
 
 ### 部分截图  
 <img src="doc/demo_img/01.png" width="80" height="140"/>
 
 ## 技术交流  
-<img src="https://github.com/chenjuwen/heasy/tree/master/doc/author.jpg" width="150" height="200"/>  
+<img src="https://github.com/chenjuwen/heasy/blob/master/doc/author.jpg" width="150" height="200"/>  
