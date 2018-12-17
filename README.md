@@ -25,5 +25,27 @@ Android Studio
     
 	语音合成、语音识别、人脸识别和中英文翻译的接口参数需要更新到baidu-ai\src\main\assets\ai-config.xml 配置文件中。  
 
+### JSBridge常用方法  
+#### JS端 --> Java端  
+##### dispatchAction方法  
+功能：执行指定的Action类  
+方法体： var result = jsBridge.dispatchAction(actionName, data, extend);  
+	&nbsp;&nbsp;&nbsp;&nbsp;参数说明：  
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;actionName：action的名字  
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data：action用到的数据内容，一般是json格式的字符串  
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;extend：扩展字段，当一个Action类有多个业务方法时，可以通过该字段加以区分  
+	&nbsp;&nbsp;&nbsp;&nbsp;返回值：  
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String型的值  
+
+##### log方法  
+功能：将日志信息发送到后台处理  
+方法体：jsBridge.log(logLevel, logMessage);  
+	&nbsp;&nbsp;&nbsp;&nbsp;参数说明：  
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;logLevel：日志级别，可选值有debug（默认）、info、warn、error  
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;logMessage：日志信息  
+	&nbsp;&nbsp;&nbsp;&nbsp;返回值：  
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;无  
+
+
 ## 技术交流  
 <img src="https://github.com/chenjuwen/heasy/blob/master/doc/author.jpg" width="150" height="200"/>  
