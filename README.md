@@ -1,5 +1,5 @@
 # heasy  
-heasy是一个基于Android平台的APP混合开发框架，页面层集成jquery、VUE、mint-ui、muse-ui等前端框架，具有容易使用、扩展性好、灵活性强、易维护等特性。  
+heasy是一个基于Android平台的APP混合开发框架，页面层集成jquery、VUE、mint-ui、muse-ui等前端框架，具有容易使用、扩展性好、灵活性强、易维护等特性。目前框架提供了百度的图片文字识别、身份证识别、驾驶证识别、语音识别、语音合成、人脸识别、中英文翻译，图片裁剪，二维码生成和扫描等功能。 
 
 ## 架构图   
 <img src="https://github.com/chenjuwen/heasy/blob/master/doc/design-pic.jpg"/> 
