@@ -2,31 +2,31 @@
 <root>
 	<!-- 语音合成 -->
 	<tts>
-		<appid>你的appid</appid>
-		<apikey>你的apikey</apikey>
-		<secretkey>你的secretkey</secretkey>
+		<appid>14501734</appid>
+		<apikey>vQiOse6cZYjl4Uyq2cG6iGnZ</apikey>
+		<secretkey>nXN1GaaGKaHFftc5IsxrKo6EtqUpSY6T</secretkey>
 		<person>0</person>
 		<speed>5</speed>
 	</tts>
 
 	<!-- 语音识别 -->
 	<asr>
-		<appid>你的appid</appid>
-		<apikey>你的apikey</apikey>
-		<secretkey>你的secretkey</secretkey>
+		<appid>14501734</appid>
+		<apikey>vQiOse6cZYjl4Uyq2cG6iGnZ</apikey>
+		<secretkey>nXN1GaaGKaHFftc5IsxrKo6EtqUpSY6T</secretkey>
 	</asr>
 
 	<!-- 人脸识别 -->
 	<face>
-		<appid>你的appid</appid>
-		<apikey>你的apikey</apikey>
-		<secretkey>你的secretkey</secretkey>
+		<appid>14501734</appid>
+		<apikey>vQiOse6cZYjl4Uyq2cG6iGnZ</apikey>
+		<secretkey>nXN1GaaGKaHFftc5IsxrKo6EtqUpSY6T</secretkey>
 	</face>
 
 	<!-- 翻译 -->
 	<translate>
-		<appid>你的appid</appid>
-		<secretkey>你的secretkey</secretkey>
+		<appid>20181123000238405</appid>
+		<secretkey>vGFqiFc3mezn5d_w3IvF</secretkey>
 	</translate>
 
 </root>

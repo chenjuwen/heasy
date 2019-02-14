@@ -22,7 +22,7 @@ public class DefaultCallback implements Callback {
     
     @Override
     public void onFailure(Call call, IOException ex) {
-        logger.error("callback error: " + ex.toString());
+        logger.error("callback error", ex);
         call.cancel();
     }
 

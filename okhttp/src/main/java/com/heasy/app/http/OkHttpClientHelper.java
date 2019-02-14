@@ -23,7 +23,10 @@ import okhttp3.Response;
  */
 public class OkHttpClientHelper {
     private static Logger logger = LoggerFactory.getLogger(OkHttpClientHelper.class);
-    private static final int DEFAULT_SECONDS = 5;
+
+    private static final int DEFAULT_CONNECT_TIMEOUT_MILLSECONDS = 10000;
+    private static final int DEFAULT_READ_TIMEOUT_MILLSECONDS = 60000;
+
     private OkHttpClient.Builder builder;
     private OkHttpClient okHttpClient;
 
@@ -32,7 +35,8 @@ public class OkHttpClientHelper {
 
         DefaultCookieJar cookieJar = new DefaultCookieJar(new MemoryCookieStore());
 
-        builder.connectTimeout(DEFAULT_SECONDS, TimeUnit.SECONDS)
+        builder.connectTimeout(DEFAULT_CONNECT_TIMEOUT_MILLSECONDS, TimeUnit.MILLISECONDS)
+        	.readTimeout(DEFAULT_READ_TIMEOUT_MILLSECONDS, TimeUnit.MILLISECONDS)
                 .cookieJar(cookieJar);
     }
     
@@ -71,29 +75,35 @@ public class OkHttpClientHelper {
      * @return
      */
     public String synGet(String url){
-        return synGet(url, null);
-    }
-
-    public String synGet(String url, Map<String, String> params){
+    	String result = null;
         try {
-            StringBuilder sb = new StringBuilder(url);
-            if(params != null && params.size() > 0){
-                sb.append("?");
-                sb.append(ParameterUtil.toParamString(params, true));
-            }
-            logger.debug(sb.toString());
-
-            Request request = new Request.Builder().url(sb.toString()).build();
+            Request request = new Request.Builder().url(url).build();
             Response response = okHttpClient.newCall(request).execute();
             if(response.isSuccessful()){
-                return response.body().string();
+            	result = response.body().string();
             }
             response.close();
-
+            
         }catch (Exception ex){
             logger.error("synGet error: " + ex.toString());
         }
-        return null;
+        return result;
+    }
+    
+    public byte[] synGetBytes(String url){
+    	byte[] result = null;
+        try {
+            Request request = new Request.Builder().url(url).build();
+            Response response = okHttpClient.newCall(request).execute();
+            if(response.isSuccessful()){
+            	result = response.body().bytes();
+            }
+            response.close();
+            
+        }catch (Exception ex){
+            logger.error("synGetBytes error: " + ex.toString());
+        }
+        return result;
     }
 
     /**
@@ -117,6 +127,23 @@ public class OkHttpClientHelper {
     	RequestBody body = RequestBody.create(JSON, jsonData);
         Request request = new Request.Builder().url(url).post(body).build();
         okHttpClient.newCall(request).enqueue(new DefaultCallback(listener));
+    }
+    
+    public String postJSON(String url, String jsonData)throws Exception{
+		MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    	RequestBody body = RequestBody.create(JSON, jsonData);
+        Request request = new Request.Builder().url(url).post(body).build();
+        Response response = okHttpClient.newCall(request).execute();
+        
+        if(response.isSuccessful()){
+            String value = response.body().string();
+            response.close();
+            return value;
+        }else{
+            response.close();
+            System.out.println(response.message());
+            return "";
+        }
     }
     
     public void post(Request request, HttpClientListener listener){
