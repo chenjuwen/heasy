@@ -13,7 +13,7 @@ public class MainTest {
         String key = AESUtil.generateKey();
         System.out.println("key: " + key);
 
-        String data = "dbs2016原始数据qwer!@#$%^&*()_+}{:.,<>?fdasfad45353范德萨发打发范德萨发生阿范德萨阿范德萨发顺丰阿发法萨芬撒";
+        String data = "2016原始数据qwer!@#$%^&*()_+}{:.,<>?fdasfad45353范德萨发打发范德萨发生阿范德萨阿范德萨发顺丰阿发法萨芬撒";
         System.out.println("原始数据：" + data + ", " + data.getBytes().length);
 
         String dataEnc = AESUtil.encrypt(key, data);
