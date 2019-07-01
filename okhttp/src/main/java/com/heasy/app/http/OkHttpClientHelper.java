@@ -89,6 +89,35 @@ public class OkHttpClientHelper {
         }
         return result;
     }
+
+    public String synGet(String url, Map<String, String> params){
+        String result = null;
+        try {
+            StringBuilder builder = new StringBuilder(url);
+            int i = 0;
+            if(params != null && params.size() > 0){
+                builder.append("?");
+                for(String key : params.keySet()) {
+                    String value = params.get(key);
+                    if (i != 0) {
+                        builder.append('&');
+                    }
+
+                    builder.append(key);
+                    builder.append('=');
+                    builder.append(URLEncoder.encode(value, "utf-8"));
+
+                    i++;
+                }
+            }
+
+            result = synGet(builder.toString());
+
+        }catch (Exception ex){
+            logger.error("synGet error: " + ex.toString());
+        }
+        return result;
+    }
     
     public byte[] synGetBytes(String url){
     	byte[] result = null;
