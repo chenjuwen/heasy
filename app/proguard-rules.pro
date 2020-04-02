@@ -115,6 +115,52 @@
     <init>(java.lang.Throwable);
 }
 
+#保证第三方依赖包不混淆
+-dontwarn org.**
+-keep class org.** { *; }
+
+-dontwarn net.**
+-keep class net.** { *; }
+
+-dontwarn de.**
+-keep class de.** { *; }
+
+-dontwarn ch.**
+-keep class ch.** { *; }
+
+-dontwarn java.**
+-keep class java.** { *; }
+
+-dontwarn javax.**
+-keep class javax.** { *; }
+
+-dontwarn okhttp3.**
+-keep class okhttp3.** { *; }
+
+-dontwarn okio.**
+-keep class okio.** { *; }
+
+-dontwarn com.googlecode.**
+-keep class com.googlecode.** { *; }
+
+-dontwarn com.google.**
+-keep class com.google.** { *; }
+
+-dontwarn com.alibaba.**
+-keep class com.alibaba.** { *; }
+
+-dontwarn com.howardreactive.**
+-keep class com.howardreactive.** { *; }
+
+-dontwarn com.soundcloud.**
+-keep class com.soundcloud.** { *; }
+
+-dontwarn com.journeyapps.**
+-keep class com.journeyapps.** { *; }
+
+-dontwarn com.heasy.**
+-keep class com.heasy.** { *; }
+
 #OCR
 -keep class com.baidu.ocr.sdk.**{*;}
 -dontwarn com.baidu.ocr.**

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
 <HEAD>
-	<TITLE>课程分类</TITLE>
+	<TITLE>英语</TITLE>
 	<link rel="stylesheet" type="text/css" href="css/mint.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/common.css" />
 
@@ -13,6 +13,10 @@
 	<script src="js/mint.min.js"></script>
 
 	<style type="text/css">
+		.mint-cell-wrapper {
+			background-image: none;
+		}
+
 		.mint-cell:last-child {
 			background-image: none;
 		}
@@ -21,13 +25,17 @@
 
 <BODY>
 	<div id="app" class="vue-mint-container">
-		<mt-header fixed title="课程分类">
+		<mt-header fixed title="英语">
 			<mt-button icon="back" slot="left" @click="_goback">返回</mt-button>
 		</mt-header>
 
-		<div style="border-bottom: 1px solid #d9d9d9;">
-			<div @click="_contentList(item.id)" v-for="item in dataList">
+		<div style="padding:5px;">
+			<div v-for="item in gradeList" @click="showUnit(item.id)">
 				<mt-cell :title="item.name" is-link></mt-cell>
+			</div>
+
+			<div @click="changePage('yy_globalSearch.html')" style="border-bottom:1px solid #d9d9d9">
+				<mt-cell title="全局搜索" is-link></mt-cell>
 			</div>
 		</div>
 	</div>
@@ -36,30 +44,34 @@
 		var vm = new Vue({
 			el: '#app',
 			data: {
-				gradeId: "",
-				dataList: [
-					//{id:"1", name:"Unit 1"},
-					//{id:"2", name:"Unit 2"},
-					//{id:"3", name:"Unit 3"}
+				gradeList: [
+					//{id:"1", name:"111"},
+					//{id:"2", name:"222"}
 				]
 			},
 			methods: {
 				_goback: function(){
-					backPage("learn_english.html");
+					backMainPage();
 				},
-				_contentList: function(unitId){
-					var obj = {"parameters": "gradeId=" + vm.gradeId + "&unitId="+unitId, "url": "yy_content.html"};
+				changePage: function(pageURL, actionName, extend){
+					var obj = {"url":pageURL};
+
+					if(actionName != null && actionName != ""){
+						jsBridge.dispatchAction(actionName, JSON.stringify(obj), extend);
+					}else{
+						jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj), extend);
+					}
+				},
+				showUnit: function(gradeId){
+					var obj = {"parameters": "gradeId="+gradeId, "url": "yy_unit_list.html"};
 					jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj));
 				}
 			}
 		});
 
 		function pageFinishCallback(){
-			vm.gradeId = getPageParameter("gradeId");
-
-			var obj = {"gradeId":vm.gradeId};
-			var dataArr = jsBridge.dispatchAction("YYGrade", JSON.stringify(obj), "getUnitList");
-			vm.dataList = jQuery.parseJSON(dataArr);
+			var gradeList = jsBridge.dispatchAction("YYGrade", "", "getGradeList");
+			vm.gradeList = jQuery.parseJSON(gradeList);
 		}
 	</script>
 

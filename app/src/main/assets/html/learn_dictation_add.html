@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<TITLE>创建听写任务</TITLE>
+	<link rel="stylesheet" type="text/css" href="css/mint.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+
+	<script src="js/jquery.min-1.11.3.js"></script>
+	<script src="js/JSConstants.js"></script>
+	<script src="js/JSBridge.js"></script>
+	<script src="js/JSBridgeExt.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/mint.min.js"></script>
+
+	<style type="text/css">
+		.field-btton-container {
+			margin: 10px 0 10px 0;
+			text-align: center;
+		}
+		
+		.mint-cell:last-child {
+			background-position: initial;
+		}
+	</style>
+</HEAD>
+
+<BODY>
+	<div id="app" class="vue-mint-container">
+		<mt-header fixed title="创建听写任务">
+			<mt-button icon="back" slot="left" @click="_goback">返回</mt-button>
+		</mt-header>
+
+		<mt-field label="标题" v-model.trim="title"></mt-field>
+
+		<div style="border-bottom:1px solid #d9d9d9; border-top:1px solid #d9d9d9; padding-top: 5px;">
+			<div style="margin-left:10px;">听写内容(词语之间用逗号分隔)</div>
+			<mt-field label="" type="textarea" rows="13" v-model.trim="content"></mt-field>
+		</div>
+
+		<div class="field-btton-container">
+			<mt-button type="primary" size="large" @click="_save">保存</mt-button>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				title: "",
+				content: ""
+			},
+			methods: {
+				_goback: function(){
+					transferPage("learn_dictation_list.html");
+				},
+
+				_save: function(){
+					saveData();
+				}
+			}
+		});
+
+		function pageFinishCallback(){
+			var date = new Date();
+			var y = date.getFullYear().toString();
+			var mm = (date.getMonth() + 1).toString();
+			if(mm.length == 1) mm = "0" + mm;
+			var d = date.getDate().toString();
+			if(d.length == 1) d = "0" + d;
+			var h = date.getHours().toString();
+			if(h.length == 1) h = "0" + h;
+			var MM = date.getMinutes().toString();
+			if(MM.length == 1) MM = "0" + MM;
+			var s = date.getSeconds().toString();
+			if(s.length == 1) s = "0" + s;
+
+			vm.title = y + "-" + mm + "-" + d + " " + h + ":" + MM + ":" + s;
+		}
+
+		function saveData(){
+			if(vm.title == ""){
+				vm.$toast({
+					message: '请输入标题！',
+					duration: 1500
+				});
+				return;
+			}
+
+			if(vm.content == ""){
+				vm.$toast({
+					message: '请输入内容！',
+					duration: 1500
+				});
+				return;
+			}
+
+			var obj = {"title":vm.title, "content":vm.content};
+			var msg = jsBridge.dispatchAction("DictationAction", JSON.stringify(obj), "save");
+			
+			if(msg == "success"){
+				alert("保存成功");
+				transferPage("learn_dictation_list.html");
+			}else{
+				alert(msg);
+			}
+		}
+	</script>
+
+</BODY>
+</HTML>

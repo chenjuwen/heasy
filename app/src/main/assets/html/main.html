@@ -101,6 +101,18 @@
 			color: 14px;
 			margin: 3px;
 		}
+
+
+		/* learn */
+		.learn {
+			padding: 5px 0;
+			width: 100%;
+		}
+		.learn td{
+			background-color: #eee;
+			text-align: center;
+			padding: 20px 0;
+		}
 	</style>
 </HEAD>
 <BODY>
@@ -109,12 +121,13 @@
 
 		<mt-tab-container v-model="selectedTab">
 			<mt-tab-container-item id="tab1">
-				<div v-for="item in gradeList" @click="showUnit(item.id)">
-					<mt-cell :title="item.name" is-link></mt-cell>
-				</div>
-
-				<div @click="changePage('yy_globalSearch.html')" style="border-bottom:1px solid #d9d9d9">
-					<mt-cell title="全局搜索" is-link></mt-cell>
+				<div class="learn">
+					<table align="center" width="100%">
+						<tr>
+							<td width="50%" @click="selectLearn('english')">英语</td>
+							<td width="50%" @click="selectLearn('dictation_list')">听写</td>
+						</tr>
+					</table>
 				</div>
 			</mt-tab-container-item>
 
@@ -191,7 +204,7 @@
 
 		<mt-tabbar fixed v-model="selectedTab">
 			<mt-tab-item id="tab1">
-				<img slot="icon" src="images/english.png">英语
+				<img slot="icon" src="images/english.png">小学学习
 			</mt-tab-item>
 			<mt-tab-item id="tab2">
 				<img slot="icon" src="images/translate.png">翻译
@@ -212,11 +225,6 @@
 		var vm = new Vue({
 			el: '#app',
 			data: {
-				gradeList: [
-					//{id:"1", name:"111"},
-					//{id:"2", name:"222"}
-				],
-
 				selectedTab: "tab1",
 
 				transFrom: "",
@@ -234,10 +242,6 @@
 					}else{
 						jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj), extend);
 					}
-				},
-				showUnit: function(gradeId){
-					var obj = {"parameters": "gradeId="+gradeId, "url": "yy_unit_list.html"};
-					jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj));
 				},
 				translate: function(transType){ //翻译
 					var obj = {"content":this.transFrom, "transType": transType};
@@ -261,6 +265,10 @@
 						var obj = {"url":"tool_" + toolName + ".html"};
 						jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj), "");
 					}
+				},
+				selectLearn: function(name){
+					var obj = {"url":"learn_" + name + ".html"};
+					jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj), "");
 				},
 				notify: function(){
 					var data = {"id":1};
@@ -291,9 +299,6 @@
 			if(currentTab != ""){
 				vm.selectedTab = currentTab;
 			}
-
-			var gradeList = jsBridge.dispatchAction("YYGrade", "", "getGradeList");
-			vm.gradeList = jQuery.parseJSON(gradeList);
         }
 
         function speechCallback(content){

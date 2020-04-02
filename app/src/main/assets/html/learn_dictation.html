@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<TITLE>听写</TITLE>
+	<link rel="stylesheet" type="text/css" href="css/mint.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+
+	<script src="js/jquery.min-1.11.3.js"></script>
+	<script src="js/JSConstants.js"></script>
+	<script src="js/JSBridge.js"></script>
+	<script src="js/JSBridgeExt.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/mint.min.js"></script>
+
+	<style type="text/css">
+		.table1 {
+			margin: 10px 0 10px 0;
+			text-align: center;
+			border-collapse: collapse;
+		}
+
+		.table1 td {
+			border-collapse: collapse;
+			background-color: #ddd;
+			padding: 5px;
+		}
+
+		.table1 .item {
+			font-size: 100px;
+			font-weight: 600;
+			background-color: #fff;
+		}
+		
+		.mint-cell:last-child {
+			background-position: initial;
+		}
+	</style>
+</HEAD>
+
+<BODY>
+	<div id="app" class="vue-mint-container">
+		<mt-header fixed title="听写">
+			<mt-button icon="back" slot="left" @click="_goback">返回</mt-button>
+			<mt-button slot="right">
+				<span style="color:red; font-size:20px;">{{curIndex+1}} / {{totalCount}}</span>
+			</mt-button>
+		</mt-header>
+
+		<div>
+			<table border=0 width="100%" class="table1">
+				<tr>
+					<td align="center">
+						<mt-button type="primary" size="normal" @click="_start" style="width:100px;margin-right:5px;background-color:green;">开始</mt-button>
+						<mt-button type="primary" size="normal" @click="_showItem">显示/隐藏</mt-button>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" valign="middle" height="220" class="item">
+						<span id="word" style="display:none;">{{word}}</span>
+					</td>
+				</tr>
+				<tr>
+					<td align="center">
+						<mt-button type="primary" size="normal" @click="_provItem" style="width:100px;">上一个</mt-button>
+						<mt-button type="primary" size="normal" @click="_relistenItem" style="margin:0 5px;width:100px;background-color:red;">重听</mt-button>
+						<mt-button type="primary" size="normal" @click="_nextItem" style="width:100px;">下一个</mt-button>
+					</td>
+				</tr>
+			</table>
+
+			<table border=0 width="100%">
+				<tr>
+					<td width="30%">
+						发音人：
+					</td>
+					<td>
+						<select v-model="person" style="width:130px; height:30px;">
+							<option value="0">女声</option>
+							<option value="1">男声</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						语速：
+					</td>
+					<td>
+						<select v-model="speed" style="width:130px; height:30px;">
+							<option v-for="n in options1" :value="n">{{ n }}</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						覆盖旧文件：
+					</td>
+					<td>
+						<select v-model="rewrite" style="width:130px; height:30px;">
+							<option v-for="option in options2" :value="option.value">{{ option.text }}</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		var colorIndex = 0;
+
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				id: "",
+				dataList: ["测试1", "测试2"],
+				curIndex: 0,
+				totalCount: 2,
+				word: "",
+				options1: [3,4,5],
+				options2: [{value:0, text:"否"}, {value:1, text:"是"}],
+				options3: ["#FFC0CB", "#D8BFD8", "#B0C4DE"],
+				person: "0",
+				speed: "3",
+				rewrite: "0"
+			},
+			methods: {
+				_goback: function(){
+					transferPage("learn_dictation_list.html");
+				},
+				_start: function(){
+					this.curIndex = 0;
+					jQuery("#word").hide();
+
+					if(this.dataList.length > 0){
+						this.word = this.dataList[this.curIndex];
+						createVoice();
+					}
+				},
+				_provItem: function(){
+					jQuery("#word").hide();
+					if(this.dataList.length > 0 && this.curIndex > 0){
+						this.curIndex = this.curIndex - 1;
+						this.word = this.dataList[this.curIndex];
+						createVoice();
+					}
+				},
+				_relistenItem: function(){
+					createVoice();
+				},
+				_showItem: function(){
+					jQuery("#word").toggle();
+				},
+				_nextItem: function(){
+					jQuery("#word").hide();
+					if(this.dataList.length > 0 && this.curIndex < this.dataList.length-1){
+						this.curIndex = this.curIndex + 1;
+						this.word = this.dataList[this.curIndex];
+						createVoice();
+					}
+				}
+			}
+		});
+
+		function createVoice(){
+			var jsonData = {word:vm.word, person:vm.person, speed:vm.speed, rewrite:vm.rewrite};
+			var result = jsBridge.dispatchAction("DictationAction", JSON.stringify(jsonData), "voice");
+			if(result == ""){
+				jQuery("#word").parent("td").css("background", vm.options3[colorIndex++ % 3]);
+			}
+		}
+
+		function pageFinishCallback(){
+			vm.id = getPageParameter("id");
+
+			var jsonData = {id: vm.id};
+			var content = jsBridge.dispatchAction("DictationAction", JSON.stringify(jsonData), "getListenData");
+			vm.dataList = content.split(/[,，]/);
+			vm.totalCount = vm.dataList.length;
+		}
+	</script>
+
+</BODY>
+</HTML>

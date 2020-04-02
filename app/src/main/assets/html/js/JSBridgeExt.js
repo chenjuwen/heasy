@@ -91,3 +91,11 @@ function backPage(pageURL, parameters){
     jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj));
 }
 
+function transferPage(pageURL, parameters, actionName, extend){
+    var obj = {"url":pageURL, "parameters":parameters};
+    if(actionName != null && actionName != ""){
+        jsBridge.dispatchAction(actionName, JSON.stringify(obj), extend);
+    }else{
+        jsBridge.dispatchAction(actionNames.PageTransfer, JSON.stringify(obj), extend);
+    }
+}

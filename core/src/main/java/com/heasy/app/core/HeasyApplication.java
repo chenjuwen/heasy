@@ -6,6 +6,7 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.heasy.app.core.service.ServiceEngineFactory;
+import com.heasy.app.core.utils.MP3Play;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -36,6 +37,8 @@ public class HeasyApplication extends MultiDexApplication {
         }catch (Exception ex){
             ex.printStackTrace();
         }
+
+        MP3Play.destroy();
 
         System.exit(0);
     }

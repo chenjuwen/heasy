@@ -1,5 +1,6 @@
 package com.heasy.app.core.utils;
 
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 
 import org.slf4j.Logger;
@@ -14,28 +15,37 @@ public class MP3Play {
 
     public static void play(String filePath){
         try{
-            mediaPlayer = new MediaPlayer();
-            //mediaPlayer.reset();
+            init();
+
+            mediaPlayer.reset();
             mediaPlayer.setDataSource(filePath);
-            //mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.prepare();
             mediaPlayer.start();
             logger.debug("media start play!!");
 
+            /*
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mMediaPlayer) {
-                    stopPlay();
+                    destroy();
                 }
             });
+            */
 
         }catch(Exception ex){
             logger.error("", ex);
-            stopPlay();
+            destroy();
         }
     }
 
-    private static void stopPlay(){
+    public static void init(){
+        if(mediaPlayer == null){
+            mediaPlayer = new MediaPlayer();
+        }
+    }
+
+    public static void destroy(){
         if(mediaPlayer != null) {
             try {
                 if(mediaPlayer.isPlaying()){

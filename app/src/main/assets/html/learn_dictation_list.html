@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<TITLE>听写任务列表</TITLE>
+	<link rel="stylesheet" type="text/css" href="css/mint.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+
+	<script src="js/jquery.min-1.11.3.js"></script>
+	<script src="js/JSConstants.js"></script>
+	<script src="js/JSBridge.js"></script>
+	<script src="js/JSBridgeExt.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/mint.min.js"></script>
+
+	<style type="text/css">
+		.mint-cell:last-child {
+			background-image: none;
+		}
+		.data-container {
+			border-top: 2px solid #d9d9d9;
+			border-bottom: 2px solid #d9d9d9;
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 16px;
+		}
+
+		.data-container .header{
+			background-color: #ddd;
+			height: 40px;
+		}
+
+		.data-container .data{
+			height: 40px;
+		}
+
+		.data-container .data-td{
+			border-bottom: 1px solid #ddd;
+		}
+	</style>
+</HEAD>
+
+<BODY>
+	<div id="app" class="vue-mint-container">
+		<mt-header fixed title="听写任务列表">
+			<mt-button icon="back" slot="left" @click="_goback">返回</mt-button>
+			<mt-button slot="right" @click="_add">
+				<img src="images/add.png" width="20" height="20">
+			</mt-button>
+		</mt-header>
+
+		<table class="data-container" border=0>
+			<tr class="header">
+				<td width="20%">序号</td>
+				<td width="60%">标题</td>
+				<td width="20%">是否听写</td>
+			</tr>
+			<tr @click.stop="_cell(item.id)" v-for="item in dataList" class="data">
+				<td class="data-td">{{ item.id }}</td>
+				<td class="data-td">{{ item.title }}</td>
+				<td class="data-td">{{ item.dictation }}</td>
+			</tr>
+		</table>
+
+		<mt-actionsheet :actions="actionsheetData2" v-model="sheetVisible2"> </mt-actionsheet>
+	</div>
+
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				dataList: [
+				  	{id:1, title:"2020-03-16 14:25", dictation:"否"}
+				],
+
+				dataKey: "",
+
+				sheetVisible2: false,
+				actionsheetData2: [
+					{name:"听写", method: _dictation},
+					{name:"查看", method: _view},
+					{name:"编辑", method: _edit},
+					{name:"删除", method: _delete}
+				]
+			},
+			methods: {
+				_goback: function(){
+					backMainPage();
+				},
+				_add: function(){
+					transferPage("learn_dictation_add.html");
+				},
+				_cell: function(id){
+					this.sheetVisible2 = true;
+					this.dataKey = id;
+				}
+			}
+		});
+
+		function _dictation(){
+			transferPage("learn_dictation.html", "id="+vm.dataKey);
+		}
+
+		function _view(){
+			var obj = {"id":vm.dataKey, "url":"learn_dictation_view.html"};
+			jsBridge.dispatchAction("DictationAction", JSON.stringify(obj), "view");
+		}
+
+		function _edit(){
+			var obj = {"id":vm.dataKey, "url":"learn_dictation_edit.html"};
+			jsBridge.dispatchAction("DictationAction", JSON.stringify(obj), "view");
+		}
+
+		function _delete(){
+			if(confirm("确定删除？")){
+				var obj = {"id":vm.dataKey};
+				jsBridge.dispatchAction("DictationAction", JSON.stringify(obj), "delete");
+				pageFinishCallback();
+			}
+		}
+
+		function pageFinishCallback(){
+			var dataArr = jsBridge.dispatchAction("DictationAction", JSON.stringify({}), "list");
+			vm.dataList = jQuery.parseJSON(dataArr);
+		}
+	</script>
+
+</BODY>
+</HTML>
