@@ -44,7 +44,7 @@ public class DictationAction implements Action {
         if("list".equalsIgnoreCase(extend)){
             JSONArray arr1 = new JSONArray();
 
-            String sql = "select id,title,content,create_time,dictation from dictation order by create_time desc";
+            String sql = "select id,title,content,create_time,dictation from dictation order by title desc";
             List<Map<String, String>> dataList = cipherManager.rawQuery(sql, null);
 
             if(dataList != null && dataList.size() > 0){
